@@ -1,49 +1,29 @@
 package com.ee.cruddemo.repositories;
 
-import com.ee.cruddemo.TodoNotFoundException;
 import com.ee.cruddemo.entities.Todo;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Repository
-public class TodoRepository {
-    private AtomicLong NEXT_ID = new AtomicLong(0);
-    private Map<Long, Todo> TODOS = new HashMap<>();
+@Transactional
+public interface TodoRepository extends JpaRepository<Todo, Long> {
 
-    public List<Todo> getAllTodos() {
-        return new ArrayList<>(TODOS.values());
-    }
+    @Query("select t from Todo t where t.completed = true")
+    //@Query(value = "select * from todos t where t.completed = true", nativeQuery = true)
+    List<Todo> findCompletedTodos(Pageable pageable);
 
-    public Todo getTodoById(Long id) {
-        return TODOS.get(id);
-    }
+    @Query("delete from Todo t where t.completed = true")
+    @Modifying
+    void deleteAllCompletedTodos();
 
-    public Todo createTodo(Todo todo) {
-        todo.setId(NEXT_ID.incrementAndGet());
-        todo.setCreatedOn(LocalDateTime.now());
-        TODOS.put(todo.getId(), todo);
-        return todo;
-    }
+    List<Todo> findByUserId(Long userId);
 
-    public Todo updateTodo(Todo todo) {
-        if(!TODOS.containsKey(todo.getId())) {
-            throw new TodoNotFoundException("Id doesn't exists");
-        }
-        TODOS.put(todo.getId(), todo);
-        return todo;
-    }
-
-    public void deleteTodo(Long id) {
-        if(!TODOS.containsKey(id)) {
-            throw new TodoNotFoundException("Id doesn't exists");
-        }
-        TODOS.remove(id);
-    }
-
+    List<Todo> findByUserEmail(String userEmail);
 }
+
