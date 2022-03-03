@@ -1,4 +1,4 @@
-package com.ee.springsecurity.demo;
+package com.ee.springsecurity.demo.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

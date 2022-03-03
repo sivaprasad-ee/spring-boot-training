@@ -1,4 +1,4 @@
-package com.ee.springsecurity.demo;
+package com.ee.springsecurity.demo.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

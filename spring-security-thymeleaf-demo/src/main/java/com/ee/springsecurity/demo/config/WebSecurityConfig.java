@@ -1,4 +1,4 @@
-package com.ee.springsecurity.demo;
+package com.ee.springsecurity.demo.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,7 @@ import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
@@ -45,7 +46,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             //.antMatchers("/user").authenticated()
            ;
 
-        http.formLogin();
+        http.formLogin()
+                .loginPage("/login")
+                //.loginProcessingUrl("/handleLogin")
+                //.failureUrl("/login?failed")
+                //.failureUrl("/login?error")
+                .and()
+           .logout()
+                .logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll()
+                .logoutSuccessUrl("/login?logout")
+        ;
 
        // http.logout().logoutUrl("/logout");
     }

@@ -12,5 +12,6 @@
 		<module>spring-boot-basics</module>
 		<module>spring-boot-crud-demo</module>
 		<module>spring-security-thymeleaf-demo</module>
+		<module>spring-security-jwt-demo</module>
 	</modules>
 </project>
